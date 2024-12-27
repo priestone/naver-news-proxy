@@ -14,7 +14,6 @@ app.use(cors());
 
 // 간단 테스트용 라우트 (제대로 작동하는지 확인)
 app.get("/", (req, res) => {
-  console.log(888);
   res.send("Hello from Render Proxy Server!");
 });
 
@@ -49,6 +48,35 @@ app.get("/api/news", async (req, res) => {
     console.error(error);
     res.status(500).json({
       error: "네이버 API 호출 오류",
+      detail: error.message,
+    });
+  }
+});
+
+app.get("/api/images", async (req, res) => {
+  try {
+    const query = req.query.query || "테스트";
+
+    const response = await axios.get(
+      "https://openapi.naver.com/v1/search/image.json",
+      {
+        params: {
+          query,
+          display: 10,
+          start: 1,
+          sort: "sim",
+        },
+        headers: {
+          "X-Naver-Client-Id": process.env.NAVER_CLIENT_ID,
+          "X-Naver-Client-Secret": process.env.NAVER_CLIENT_SECRET,
+        },
+      }
+    );
+    return res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "네이버 이미지 API 호출 오류",
       detail: error.message,
     });
   }
