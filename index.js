@@ -43,7 +43,7 @@ app.get("/api/news", async (req, res) => {
     );
 
     // 응답 데이터를 그대로 전달
-    console.log(response);
+    // console.log(response);
     return res.json(response.data);
   } catch (error) {
     console.error(error);
