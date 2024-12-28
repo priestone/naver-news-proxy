@@ -67,8 +67,8 @@ app.get("/api/images", async (req, res) => {
           sort: "sim",
         },
         headers: {
-          "X-Naver-Client-Id": process.env.NAVER_CLIENT_ID,
-          "X-Naver-Client-Secret": process.env.NAVER_CLIENT_SECRET,
+          "X-Naver-Client-Id": "gFtad_k95qlwI3QbSo7v",
+          "X-Naver-Client-Secret": "UoHpSuZaDp",
         },
       }
     );
