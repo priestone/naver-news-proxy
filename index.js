@@ -82,6 +82,48 @@ app.get("/api/images", async (req, res) => {
   }
 });
 
+app.get("/api/searchAll", async (req, res) => {
+  try {
+    const query = req.query.query || "테스트";
+
+    const [newsResponse, imageResponse] = await Promise.all([
+      axios.get("https://openapi.naver.com/v1/search/news.json", {
+        params: {
+          query,
+          display: 10,
+          start: 1,
+          sort: "date",
+        },
+        headers: {
+          // .env 쓰면 process.env.NAVER_CLIENT_ID 식으로 넣기
+          "X-Naver-Client-Id": "gFtad_k95qlwI3QbSo7v",
+          "X-Naver-Client-Secret": "UoHpSuZaDp",
+        },
+      }),
+      axios.get("https://openapi.naver.com/v1/search/image.json", {
+        params: {
+          query,
+          display: 10,
+          start: 1,
+          sort: "sim",
+        },
+        headers: {
+          "X-Naver-Client-Id": "gFtad_k95qlwI3QbSo7v",
+          "X-Naver-Client-Secret": "UoHpSuZaDp",
+        },
+      }),
+    ]);
+
+    res.json({
+      news: newsResponse.data.items,
+      images: imageResponse.data.items,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "검색 실패" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
